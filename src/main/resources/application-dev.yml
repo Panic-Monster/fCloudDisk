@@ -1,0 +1,122 @@
+spring:
+  application:
+    name: fCloudDisk
+
+  datasource:
+    url: jdbc:mysql://192.168.10.128:3306/cloud_disk?useSSL=false&serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: root
+    type: com.alibaba.druid.pool.DruidDataSource
+
+    druid:
+      # 初始化连接数
+      initial-size: 5
+      # 最小空闲连接数
+      min-idle: 5
+      # 最大连接数
+      max-active: 20
+      # 获取连接的最大等待时间（毫秒）
+      max-wait: 60000
+
+      # 连接有效性检查
+      validation-query: SELECT 1
+      # 借 连接的时候检查
+      test-on-borrow: false
+      # 还 连接的时候检查
+      test-on-return: false
+      # 空闲连接的时候检查
+      test-while-idle: true
+
+      # 空闲连接检测周期（毫秒）= 每 60 秒执行一次后台检查
+      time-between-eviction-runs-millis: 60000
+      # 连接的最小生存时间（毫秒）= 5 分钟
+      min-evictable-idle-time-millis: 300000
+
+      # 过滤器（stat：SQL 监控；wall：防火墙（WallFilter）；slf4j：日志输出）
+      filters: stat,wall,slf4j
+
+      # 监控页面配置
+      stat-view-servlet:
+        enabled: true
+        url-pattern: /druid/*
+        login-username: admin
+        login-password: admin123
+        allow: 127.0.0.1
+
+      web-stat-filter:
+        enabled: true
+        url-pattern: /*
+        exclusions: "*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*"
+  # 发送邮件
+  mail:
+    # 邮件服务器地址
+    host: smtp.qq.com
+    port: 465
+    username: 1551531527@qq.com
+    password: rfqksgssuseihfgi
+    default-encoding: utf-8
+    protocol: smtp
+    properties:
+      mail.smtp.auth: true        # 需要身份验证
+      mail.smtp.ssl.enable: true  # 开启 SSL
+      mail.smtp.ssl.trust: smtp.example.com  # 信任指定服务器
+      mail.debug: true
+  # redis
+  data:
+    redis:
+      database: 0
+      host: 192.168.10.128
+      port: 6379
+      password: 123456
+      connect-timeout: 5000ms
+#      lettuce:
+#        pool:
+#          max-active: 8
+#          max-idle: 8
+#          min-idle: 0
+#          max-wait: 1000ms
+
+# mybatis
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+  global-config:
+    # 全局配置
+    db-config:
+      # 数据库配置
+      id-type: assign_uuid
+
+# 项目基础
+server:
+  port: 7529
+  servlet:
+    context-path: /fcd
+    session:
+      timeout: 30m
+# 日志
+# %d{} 时间 %thread 线程名 %level 日志级别 %logger{36} 日志来源（最多36字符） %msg 日志内容
+logging:
+  level:
+    root: info
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+# knife4j
+# springdoc-openapi项目配置
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+  api-docs:
+    path: /v3/api-docs
+  group-configs:
+    - group: 'default'
+      paths-to-match: '/**'
+      packages-to-scan: com.fujimao.fclouddisk
+# knife4j的增强配置，不需要增强可以不配
+knife4j:
+  enable: true
+  setting:
+    language: zh_cn
+# QQ登录相关
