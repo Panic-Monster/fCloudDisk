@@ -8,7 +8,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @SpringBootApplication
-@MapperScan("com.fujimao.fclouddisk.mapper")
+@MapperScan("com.fujimao.fclouddisk.mappers")
 @EnableScheduling
 @EnableTransactionManagement
 @EnableAsync
