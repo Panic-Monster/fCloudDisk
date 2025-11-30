@@ -1,0 +1,54 @@
+package com.fujimao.fclouddisk.entity.vo;
+
+import lombok.Data;
+
+import java.util.Date;
+
+@Data
+public class UserInfoVo {
+
+    /**
+     * 用户ID
+     */
+    private String userId;
+
+    /**
+     * 用户昵称
+     */
+    private String nickName;
+
+    /**
+     * 邮箱
+     */
+    private String email;
+
+    /**
+     * qq_open_id
+     */
+    private String qqOpenId;
+
+    /**
+     * qq头像
+     */
+    private String qqAvatar;
+
+    /**
+     * 创建时间
+     */
+    private Date createTime;
+
+    /**
+     * 更新时间（包括用户信息和最后登录时间）
+     */
+    private Date updateTime;
+
+    /**
+     * 使用空间单位 byte
+     */
+    private Long useSpace;
+
+    /**
+     * 总空间
+     */
+    private Long totalSpace;
+}
