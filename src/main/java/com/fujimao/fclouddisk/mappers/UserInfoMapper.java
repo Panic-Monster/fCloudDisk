@@ -1,6 +1,6 @@
 package com.fujimao.fclouddisk.mappers;
 
-import com.fujimao.fclouddisk.entity.query.UserInfo;
+import com.fujimao.fclouddisk.entity.po.UserInfo;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**

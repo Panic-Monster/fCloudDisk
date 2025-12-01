@@ -1,7 +1,7 @@
 package com.fujimao.fclouddisk.service;
 
 import com.fujimao.fclouddisk.common.BaseResponse;
-import com.fujimao.fclouddisk.entity.query.UserInfo;
+import com.fujimao.fclouddisk.entity.po.UserInfo;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.fujimao.fclouddisk.entity.vo.UserInfoVo;
 import com.fujimao.fclouddisk.entity.vo.UserLoginVo;
@@ -12,5 +12,10 @@ import com.fujimao.fclouddisk.entity.vo.UserLoginVo;
 * @createDate 2025-11-29 09:53:19
 */
 public interface UserInfoService extends IService<UserInfo> {
-    BaseResponse<UserInfoVo> doLogin(UserLoginVo userLoginVo);
+    /**
+     * 登录
+     * @param userLoginVo 用户登录
+     * @return
+     */
+    UserInfoVo doLogin(UserLoginVo userLoginVo);
 }

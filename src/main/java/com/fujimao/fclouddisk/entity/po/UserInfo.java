@@ -1,4 +1,4 @@
-package com.fujimao.fclouddisk.entity.query;
+package com.fujimao.fclouddisk.entity.po;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;

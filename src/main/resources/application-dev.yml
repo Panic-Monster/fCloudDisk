@@ -77,6 +77,9 @@ spring:
 #          min-idle: 0
 #          max-wait: 1000ms
 
+  session:
+    timeout: 30m
+
 # mybatis
 mybatis-plus:
   configuration:
@@ -123,3 +126,12 @@ knife4j:
   setting:
     language: zh_cn
 # QQ登录相关
+
+#图形验证码
+captcha:
+  width: 200
+  height: 100
+  count: 4
+  line-count: 5
+  url: D:\yupi_project\fCloudDisk\src\main\resources\captcha\
+

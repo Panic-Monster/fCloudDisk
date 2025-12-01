@@ -7,12 +7,15 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fujimao.fclouddisk.common.BaseResponse;
 import com.fujimao.fclouddisk.common.ErrorCode;
 import com.fujimao.fclouddisk.common.ResultUtils;
-import com.fujimao.fclouddisk.entity.query.UserInfo;
+import com.fujimao.fclouddisk.entity.po.UserInfo;
 import com.fujimao.fclouddisk.entity.vo.UserInfoVo;
 import com.fujimao.fclouddisk.entity.vo.UserLoginVo;
+import com.fujimao.fclouddisk.exception.BusinessException;
+import com.fujimao.fclouddisk.service.CaptchaService;
 import com.fujimao.fclouddisk.service.UserInfoService;
 import com.fujimao.fclouddisk.mappers.UserInfoMapper;
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Service;
 
 /**
@@ -27,7 +30,15 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo>
     @Resource
     private UserInfoMapper userInfoMapper;
 
-    public BaseResponse<UserInfoVo> doLogin(UserLoginVo userLoginVo) {
+    @Resource
+    private CaptchaService captchaService;
+
+    /**
+     * 登录
+     * @param userLoginVo 用户登录
+     * @return
+     */
+    public UserInfoVo doLogin(UserLoginVo userLoginVo) {
         String email = userLoginVo.getEmail();
         String password = userLoginVo.getPassword();
         // 校验邮箱是否存在
@@ -35,19 +46,25 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo>
         userInfoQueryWrapper.eq("email", email);
         UserInfo loginUser = userInfoMapper.selectOne(userInfoQueryWrapper);
         if (loginUser == null) {
-//            "该邮箱还未注册，请先注册";
-            return ResultUtils.error(ErrorCode.NO_REGISTER);
+            // 该邮箱还未注册，请先注册
+            throw new BusinessException(ErrorCode.NO_REGISTER);
+        }
+        // 验证图形验证码
+        boolean checkResult = captchaService.checkCaptcha(userLoginVo.getCaptchaCode(), userLoginVo.getVerifyUuid());
+        if (!checkResult) {
+            throw new BusinessException(ErrorCode.CAPTCHA_ERROR);
         }
         // 处理明文密码为MD5
         String encryptedPassword = DigestUtil.md5Hex(password);
         if (!encryptedPassword.equals(loginUser.getPassword())) {
-//            "密码错误"
-            return ResultUtils.error(ErrorCode.PARAM_ERROR);
+            // 密码错误
+            throw new BusinessException(ErrorCode.PASSWORD_ERROR);
         }
+
         // 数据脱敏
         UserInfoVo userInfoVo = new UserInfoVo();
         BeanUtil.copyProperties(loginUser, userInfoVo);
-        return ResultUtils.success(userInfoVo);
+        return userInfoVo;
     }
 }
 
