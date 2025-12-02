@@ -1,10 +1,9 @@
 package com.fujimao.fclouddisk.service;
 
-import com.fujimao.fclouddisk.common.BaseResponse;
-import com.fujimao.fclouddisk.entity.po.UserInfo;
+import com.fujimao.fclouddisk.pojo.entity.UserInfo;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.fujimao.fclouddisk.entity.vo.UserInfoVo;
-import com.fujimao.fclouddisk.entity.vo.UserLoginVo;
+import com.fujimao.fclouddisk.pojo.vo.UserInfoVo;
+import com.fujimao.fclouddisk.pojo.vo.UserLoginVo;
 
 /**
 * @author Administrator

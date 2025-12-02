@@ -25,6 +25,7 @@ public class LoginInterceptor implements HandlerInterceptor {
 
         HttpSession session = request.getSession(false);
 
+        // 如果session中有值，放行并且自动续期到30min
         if (session != null && session.getAttribute("userInfoVo") != null) {
             return true;
         }

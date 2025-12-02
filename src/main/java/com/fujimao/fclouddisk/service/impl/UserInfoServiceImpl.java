@@ -4,18 +4,15 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.crypto.digest.DigestUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.fujimao.fclouddisk.common.BaseResponse;
 import com.fujimao.fclouddisk.common.ErrorCode;
-import com.fujimao.fclouddisk.common.ResultUtils;
-import com.fujimao.fclouddisk.entity.po.UserInfo;
-import com.fujimao.fclouddisk.entity.vo.UserInfoVo;
-import com.fujimao.fclouddisk.entity.vo.UserLoginVo;
+import com.fujimao.fclouddisk.pojo.entity.UserInfo;
+import com.fujimao.fclouddisk.pojo.vo.UserInfoVo;
+import com.fujimao.fclouddisk.pojo.vo.UserLoginVo;
 import com.fujimao.fclouddisk.exception.BusinessException;
 import com.fujimao.fclouddisk.service.CaptchaService;
 import com.fujimao.fclouddisk.service.UserInfoService;
 import com.fujimao.fclouddisk.mappers.UserInfoMapper;
 import jakarta.annotation.Resource;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Service;
 
 /**

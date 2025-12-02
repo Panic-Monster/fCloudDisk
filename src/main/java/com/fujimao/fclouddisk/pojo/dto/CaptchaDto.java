@@ -1,4 +1,4 @@
-package com.fujimao.fclouddisk.entity.dto;
+package com.fujimao.fclouddisk.pojo.dto;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

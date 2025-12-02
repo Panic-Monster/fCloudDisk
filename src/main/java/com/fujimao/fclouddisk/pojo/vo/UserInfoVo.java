@@ -1,11 +1,14 @@
-package com.fujimao.fclouddisk.entity.vo;
+package com.fujimao.fclouddisk.pojo.vo;
 
 import lombok.Data;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.Date;
 
 @Data
-public class UserInfoVo {
+public class UserInfoVo implements Serializable {
+
 
     /**
      * 用户ID
@@ -51,4 +54,7 @@ public class UserInfoVo {
      * 总空间
      */
     private Long totalSpace;
+
+    @Serial
+    private static final long serialVersionUID = 7943589426608854637L;
 }

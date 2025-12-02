@@ -3,17 +3,13 @@ package com.fujimao.fclouddisk.service.impl;
 import cn.hutool.captcha.CaptchaUtil;
 import cn.hutool.captcha.LineCaptcha;
 import cn.hutool.core.util.IdUtil;
-import com.fujimao.fclouddisk.common.BaseResponse;
 import com.fujimao.fclouddisk.common.ErrorCode;
-import com.fujimao.fclouddisk.common.ResultUtils;
-import com.fujimao.fclouddisk.entity.dto.CaptchaDto;
-import com.fujimao.fclouddisk.entity.vo.CaptchaVo;
+import com.fujimao.fclouddisk.pojo.dto.CaptchaDto;
 import com.fujimao.fclouddisk.exception.ThrowUtils;
+import com.fujimao.fclouddisk.pojo.vo.CaptchaVo;
 import com.fujimao.fclouddisk.service.CaptchaService;
 import jakarta.annotation.Resource;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
@@ -41,7 +37,7 @@ public class CaptchaServiceImpl implements CaptchaService {
      * @return
      */
     @Override
-    public String generateCaptcha() {
+    public CaptchaVo generateCaptcha() {
         LineCaptcha lineCaptcha = CaptchaUtil.createLineCaptcha(captchaDto.getWidth(), captchaDto.getHeight(), captchaDto.getCount(),
                 captchaDto.getLineCount());
         String uuid = IdUtil.randomUUID();
@@ -50,11 +46,14 @@ public class CaptchaServiceImpl implements CaptchaService {
         // 获取生成的验证码
         String captchaCode = lineCaptcha.getCode();
         // 存入redis中
-        String redisKey = "captcha:code" + uuid;
+        String redisKey = "captcha:code:" + uuid;
         // 存5min
         stringRedisTemplate.opsForValue().set(redisKey, captchaCode, Duration.ofMinutes(5));
-        // 返回图片路径
-        return genUrl;
+        // 返回CaptchaVo
+        CaptchaVo captchaVo = new CaptchaVo();
+        captchaVo.setUuid(uuid);
+        captchaVo.setCodeUrl(genUrl);
+        return captchaVo;
     }
 
     /**
@@ -64,11 +63,11 @@ public class CaptchaServiceImpl implements CaptchaService {
     @Override
     public boolean checkCaptcha(String captchaCode, String uuid) {
         // 1.从 Redis 获取验证码
-        String redisKey = "captcha:" + uuid;
+        String redisKey = "captcha:code:" + uuid;
         String redisCode = stringRedisTemplate.opsForValue().get(redisKey);
         // 2.校验
         // 验证码过期
-        ThrowUtils.throwIf(redisCode == null, ErrorCode.CAPTCHA_EXPIRED);
+        ThrowUtils.throwIf(redisCode.isEmpty(), ErrorCode.CAPTCHA_EXPIRED);
         // 3.判断是否一致（忽略大小写）
         ThrowUtils.throwIf(!redisCode.equalsIgnoreCase(captchaCode), ErrorCode.CAPTCHA_ERROR);
         // 4.验证成功后删除（防止重复使用）
