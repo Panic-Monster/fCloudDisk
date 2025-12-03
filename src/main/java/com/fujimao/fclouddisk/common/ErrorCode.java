@@ -13,6 +13,7 @@ public enum ErrorCode {
     SUCCESS(0, "success", ""),
     PARAM_ERROR(40000, "请求参数错误", ""),
     NULL_ERROR(40010, "请求参数为空", ""),
+    OPERATION_ERROR(40020, "操作失败", ""),
     TOO_MANY_REQUESTS(42900, "请求过于频繁，请稍后重试", ""),
 
     // -------------------- 用户认证 --------------------
@@ -27,6 +28,7 @@ public enum ErrorCode {
     CAPTCHA_ERROR(40110, "验证码错误", ""),
     CAPTCHA_EXPIRED(40111, "验证码已过期", ""),
     CAPTCHA_NOT_SENT(40112, "验证码未发送", ""),
+    CAPTCHA_SENT_FAIL(40112, "验证码发送失败", ""),
     CAPTCHA_TOO_FREQUENT(40113, "验证码请求过于频繁", ""),
 
     // -------------------- 业务逻辑 --------------------

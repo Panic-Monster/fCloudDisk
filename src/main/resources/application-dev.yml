@@ -54,14 +54,19 @@ spring:
     host: smtp.qq.com
     port: 465
     username: 1551531527@qq.com
-    password: rfqksgssuseihfgi
+    password: rfqksgssuseihfgi # 邮箱授权码
     default-encoding: utf-8
     protocol: smtp
     properties:
-      mail.smtp.auth: true        # 需要身份验证
-      mail.smtp.ssl.enable: true  # 开启 SSL
-      mail.smtp.ssl.trust: smtp.example.com  # 信任指定服务器
-      mail.debug: true
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          ssl:
+            enable: true
+
   # redis
   data:
     redis:

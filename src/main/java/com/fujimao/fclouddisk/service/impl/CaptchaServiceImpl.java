@@ -8,8 +8,11 @@ import com.fujimao.fclouddisk.pojo.dto.CaptchaDto;
 import com.fujimao.fclouddisk.exception.ThrowUtils;
 import com.fujimao.fclouddisk.pojo.vo.CaptchaVo;
 import com.fujimao.fclouddisk.service.CaptchaService;
+import com.fujimao.fclouddisk.utils.CodeUtil;
 import jakarta.annotation.Resource;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
@@ -22,14 +25,14 @@ import java.time.Duration;
 @Service
 public class CaptchaServiceImpl implements CaptchaService {
 
-    // 图形验证码请求间隔最小时间
-    private static final int CAPTCHA_INTERVAL_SECONDS = 1;
-
     @Resource
     private CaptchaDto captchaDto;
 
     @Resource
     private StringRedisTemplate stringRedisTemplate;
+
+    @Value("${spring.mail.username}")
+    private String fromMail;
 
     /**
      * 生成图像验证码
@@ -58,6 +61,7 @@ public class CaptchaServiceImpl implements CaptchaService {
 
     /**
      * 检查验证码
+     *
      * @return
      */
     @Override
@@ -71,6 +75,41 @@ public class CaptchaServiceImpl implements CaptchaService {
         // 3.判断是否一致（忽略大小写）
         ThrowUtils.throwIf(!redisCode.equalsIgnoreCase(captchaCode), ErrorCode.CAPTCHA_ERROR);
         // 4.验证成功后删除（防止重复使用）
+        stringRedisTemplate.delete(redisKey);
+        return true;
+    }
+
+    /**
+     * 通过邮箱发送邮件
+     *
+     * @param email
+     * @return
+     */
+    @Override
+    public boolean sendEmailForCaptcha(String email) {
+        // 生成验证码
+        String code = CodeUtil.generateCode();
+        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+        simpleMailMessage.setFrom(fromMail);
+        simpleMailMessage.setTo(email);
+        simpleMailMessage.setSubject("【腹肌猫网盘系统】您的验证码");
+        simpleMailMessage.setText("您的验证码是：" + code + "，有效期 5 分钟，请勿泄露。");
+        stringRedisTemplate.opsForValue().set("verify:email:" + email, code, Duration.ofMinutes(5));
+        return false;
+    }
+
+    /**
+     * 验证邮箱发送的验证码
+     *
+     * @param email
+     * @return
+     */
+    public boolean validateCode(String email, String inputCode) {
+        String redisKey = "verify:email:" + email;
+        String code = stringRedisTemplate.opsForValue().get(redisKey);
+        // 验证是否错误
+        ThrowUtils.throwIf(!code.equals(inputCode), ErrorCode.CAPTCHA_ERROR);
+        // 验证成功后删除
         stringRedisTemplate.delete(redisKey);
         return true;
     }

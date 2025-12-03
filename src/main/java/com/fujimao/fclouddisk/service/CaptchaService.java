@@ -22,4 +22,18 @@ public interface CaptchaService {
      * @return
      */
     boolean checkCaptcha(String captchaCode, String uuid);
+
+    /**
+     * 通过邮箱发送邮件
+     * @param email
+     * @return
+     */
+    boolean sendEmailForCaptcha(String email);
+
+    /**
+     * 验证邮箱发送的验证码
+     * @param email
+     * @return
+     */
+    boolean validateCode(String email, String inputCode);
 }
