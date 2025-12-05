@@ -4,7 +4,7 @@ import com.fujimao.fclouddisk.pojo.entity.UserInfo;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.fujimao.fclouddisk.pojo.vo.UserInfoVo;
 import com.fujimao.fclouddisk.pojo.vo.UserLoginVo;
-import jakarta.servlet.http.HttpSession;
+import com.fujimao.fclouddisk.pojo.vo.UserRegisterVo;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -21,6 +21,13 @@ public interface UserInfoService extends IService<UserInfo> {
      * @return
      */
     UserInfoVo doLogin(UserLoginVo userLoginVo);
+
+    /**
+     * 注册
+     * @param userRegisterVo 用户注册
+     * @return
+     */
+    Boolean doRegister(UserRegisterVo userRegisterVo);
 
     /**
      * 修改密码

@@ -1,6 +1,9 @@
 package com.fujimao.fclouddisk.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.text.CharSequenceUtil;
+import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.crypto.digest.DigestUtil;
 import cn.hutool.crypto.digest.MD5;
@@ -14,6 +17,7 @@ import com.fujimao.fclouddisk.pojo.entity.UserInfo;
 import com.fujimao.fclouddisk.pojo.vo.UserInfoVo;
 import com.fujimao.fclouddisk.pojo.vo.UserLoginVo;
 import com.fujimao.fclouddisk.exception.BusinessException;
+import com.fujimao.fclouddisk.pojo.vo.UserRegisterVo;
 import com.fujimao.fclouddisk.service.CaptchaService;
 import com.fujimao.fclouddisk.service.UserInfoService;
 import com.fujimao.fclouddisk.mappers.UserInfoMapper;
@@ -45,6 +49,7 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo>
      * @param userLoginVo 用户登录
      * @return
      */
+    @Override
     public UserInfoVo doLogin(UserLoginVo userLoginVo) {
         String email = userLoginVo.getEmail();
         String password = userLoginVo.getPassword();
@@ -72,6 +77,43 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo>
         UserInfoVo userInfoVo = new UserInfoVo();
         BeanUtil.copyProperties(loginUser, userInfoVo);
         return userInfoVo;
+    }
+
+    /**
+     * 注册
+     * @param userRegisterVo 用户注册
+     * @return
+     */
+    @Override
+    @Transactional
+    public Boolean doRegister(UserRegisterVo userRegisterVo) {
+        // 解构
+        String email = userRegisterVo.getEmail();
+        String emailCode = userRegisterVo.getEmailCode();
+        String password = userRegisterVo.getPassword();
+        String verificationPassword = userRegisterVo.getVerificationPassword();
+        String nickName = userRegisterVo.getNickName();
+        // 校验
+        // 判空
+        ThrowUtils.throwIf(!StrUtil.isEmptyIfStr(email), ErrorCode.NULL_ERROR);
+        ThrowUtils.throwIf(!StrUtil.isEmptyIfStr(emailCode), ErrorCode.NULL_ERROR);
+        ThrowUtils.throwIf(!StrUtil.isEmptyIfStr(password), ErrorCode.NULL_ERROR);
+        ThrowUtils.throwIf(!StrUtil.isEmptyIfStr(verificationPassword), ErrorCode.NULL_ERROR);
+        ThrowUtils.throwIf(!StrUtil.isEmptyIfStr(nickName), ErrorCode.NULL_ERROR);
+        // 先判断邮箱验证码是否正确
+        boolean result = captchaService.validateCode(email, emailCode);
+        ThrowUtils.throwIf(result, ErrorCode.CAPTCHA_ERROR);
+        // 判断密码和二次验证密码是否一致
+        ThrowUtils.throwIf(!CharSequenceUtil.equals(password, verificationPassword), ErrorCode.PARAM_ERROR, "两次密码不一致");
+        // 给密码加密
+        String encryptedPassword = DigestUtil.md5Hex(password);
+        // 写入数据库
+        UserInfo userInfo = new UserInfo();
+        userInfo.setEmail(email);
+        userInfo.setNickName(nickName);
+        userInfo.setPassword(encryptedPassword);
+        // userInfoMapper.insert();
+        return true;
     }
 
     /**

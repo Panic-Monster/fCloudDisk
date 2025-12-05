@@ -8,6 +8,7 @@ import com.fujimao.fclouddisk.exception.ThrowUtils;
 import com.fujimao.fclouddisk.pojo.entity.UserInfo;
 import com.fujimao.fclouddisk.pojo.vo.UserInfoVo;
 import com.fujimao.fclouddisk.pojo.vo.UserLoginVo;
+import com.fujimao.fclouddisk.pojo.vo.UserRegisterVo;
 import com.fujimao.fclouddisk.service.CaptchaService;
 import com.fujimao.fclouddisk.service.UserInfoService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -60,12 +61,12 @@ public class UserInfoController {
 
     /**
      * 注册
-     * @param userLoginVo 用户登录实体
+     * @param userRegisterVo 用户登录实体
      */
     @Operation(summary = "用户邮箱注册", description = "通过邮箱和验证码进行注册")
     @PostMapping("/register")
-    public BaseResponse<UserInfoVo> register(@RequestBody UserLoginVo userLoginVo) {
-        // UserInfoVo userInfoVo = userInfoService.doRegister(userLoginVo);
+    public BaseResponse<UserInfoVo> register(@RequestBody UserRegisterVo userRegisterVo) {
+        UserInfoVo userInfoVo = userInfoService.doRegister(userRegisterVo);
         return ResultUtils.success(null);
     }
 

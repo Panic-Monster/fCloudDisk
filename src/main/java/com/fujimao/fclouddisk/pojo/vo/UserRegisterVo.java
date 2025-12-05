@@ -27,12 +27,12 @@ public class UserRegisterVo {
     @Schema(description = "用户注册昵称", example = "小小呆")
     private String nickName;
     /**
-     * 用户注册昵称
+     * 密码
      */
     @Schema(description = "密码", example = "xxxxxx")
     private String password;
     /**
-     * 用户注册昵称
+     * 二次验证密码
      */
     @Schema(description = "验证密码", example = "xxxxxx")
     private String verificationPassword;

@@ -32,7 +32,7 @@ public class CaptchaController {
      * 生成图形验证码
      * @return
      */
-    @Operation(summary = "生成验证码", description = "生成图形化的验证码")
+    @Operation(summary = "生成图形验证码", description = "生成图形化的验证码")
     @RateLimit(count = 1, time = 1)
     @PostMapping("/generate")
     public BaseResponse<CaptchaVo> generateCaptcha() {
@@ -61,7 +61,7 @@ public class CaptchaController {
     @PostMapping("/validate")
     public BaseResponse<Void> validateEmailCode(@RequestParam String email, @RequestParam String inputCode) {
         boolean result = captchaService.validateCode(email, inputCode);
-        ThrowUtils.throwIf(result, ErrorCode.CAPTCHA_ERROR);
+        ThrowUtils.throwIf(!result, ErrorCode.CAPTCHA_ERROR);
         return ResultUtils.success(null, "验证成功");
     }
 }
