@@ -66,7 +66,7 @@ public class UserInfoController {
     @Operation(summary = "用户邮箱注册", description = "通过邮箱和验证码进行注册")
     @PostMapping("/register")
     public BaseResponse<UserInfoVo> register(@RequestBody UserRegisterVo userRegisterVo) {
-        UserInfoVo userInfoVo = userInfoService.doRegister(userRegisterVo);
+        Boolean userInfoVo = userInfoService.doRegister(userRegisterVo);
         return ResultUtils.success(null);
     }
 
