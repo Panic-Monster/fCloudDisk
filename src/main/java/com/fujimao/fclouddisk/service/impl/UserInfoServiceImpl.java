@@ -95,14 +95,14 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo>
         String nickName = userRegisterVo.getNickName();
         // 校验
         // 判空
-        ThrowUtils.throwIf(!StrUtil.isEmptyIfStr(email), ErrorCode.NULL_ERROR);
-        ThrowUtils.throwIf(!StrUtil.isEmptyIfStr(emailCode), ErrorCode.NULL_ERROR);
-        ThrowUtils.throwIf(!StrUtil.isEmptyIfStr(password), ErrorCode.NULL_ERROR);
-        ThrowUtils.throwIf(!StrUtil.isEmptyIfStr(verificationPassword), ErrorCode.NULL_ERROR);
-        ThrowUtils.throwIf(!StrUtil.isEmptyIfStr(nickName), ErrorCode.NULL_ERROR);
+        ThrowUtils.throwIf(StrUtil.isEmptyIfStr(email), ErrorCode.NULL_ERROR);
+        ThrowUtils.throwIf(StrUtil.isEmptyIfStr(emailCode), ErrorCode.NULL_ERROR);
+        ThrowUtils.throwIf(StrUtil.isEmptyIfStr(password), ErrorCode.NULL_ERROR);
+        ThrowUtils.throwIf(StrUtil.isEmptyIfStr(verificationPassword), ErrorCode.NULL_ERROR);
+        ThrowUtils.throwIf(StrUtil.isEmptyIfStr(nickName), ErrorCode.NULL_ERROR);
         // 先判断邮箱验证码是否正确
         boolean result = captchaService.validateCode(email, emailCode);
-        ThrowUtils.throwIf(result, ErrorCode.CAPTCHA_ERROR);
+        ThrowUtils.throwIf(!result, ErrorCode.CAPTCHA_ERROR);
         // 判断密码和二次验证密码是否一致
         ThrowUtils.throwIf(!CharSequenceUtil.equals(password, verificationPassword), ErrorCode.PARAM_ERROR, "两次密码不一致");
         // 给密码加密
@@ -112,7 +112,8 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo>
         userInfo.setEmail(email);
         userInfo.setNickName(nickName);
         userInfo.setPassword(encryptedPassword);
-        // userInfoMapper.insert();
+        int insert = userInfoMapper.insert(userInfo);
+        ThrowUtils.throwIf(insert != 1, ErrorCode.DATA_SAVE_FAIL);
         return true;
     }
 
