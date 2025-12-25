@@ -3,6 +3,7 @@ package com.fujimao.fclouddisk.configs;
 import com.fujimao.fclouddisk.aop.LoginInterceptor;
 import jakarta.annotation.Resource;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -19,6 +20,15 @@ public class WebConfig implements WebMvcConfigurer {
     private LoginInterceptor loginInterceptor;
 
     @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**") // 允许所有接口
+                .allowedOrigins("*") // 前端地址
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                .allowedHeaders("*") // 允许所有请求头
+                .maxAge(3600); // 预检请求缓存时间（秒）
+    }
+
+    @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(loginInterceptor)
                 .addPathPatterns("/**")
@@ -27,7 +37,8 @@ public class WebConfig implements WebMvcConfigurer {
                         "/user/register",
                         "/captcha/**",
                         "/api-docs/**",
-                        "/swagger-ui/**"
+                        "/swagger-ui/**",
+                        "/ai/request"
                 );
     }
 

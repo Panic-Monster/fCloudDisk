@@ -2,6 +2,7 @@ package com.fujimao.fclouddisk.pojo.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.util.Date;
@@ -17,97 +18,83 @@ public class FileInfo implements Serializable {
     /**
      * 文件ID
      */
-    @TableId(value = "file_id")
+    @TableId
     private String fileId;
 
     /**
      * 用户ID
      */
-    @TableId(value = "user_id")
     private String userId;
 
     /**
      * 文件MD5值
      */
-    @TableField(value = "file_md5")
     private String fileMd5;
 
     /**
      * 父级ID
      */
-    @TableField(value = "file_pid")
     private String filePid;
 
     /**
      * 文件大小（单位byte）
      */
-    @TableField(value = "file_size")
     private Long fileSize;
 
     /**
      * 文件名
      */
-    @TableField(value = "file_name")
     private String fileName;
 
     /**
      * 文件封面
      */
-    @TableField(value = "file_cover")
     private String fileCover;
 
     /**
      * 文件路径
      */
-    @TableField(value = "file_path")
     private String filePath;
 
     /**
      * 0文件 1目录
      */
-    @TableField(value = "folder_type")
     private Integer folderType;
 
     /**
      * 文件分类（1视频 2音频 3图片 4文档 5其他）
      */
-    @TableField(value = "file_category")
     private Integer fileCategory;
 
     /**
      * 文件细节分类（1:视频 2:音频 3:图片 4:pdf 5:doc 6:excel 7:txt 8:code 9:zip 5:其他）
      */
-    @TableField(value = "file_type")
     private Integer fileType;
 
     /**
      * 状态（0:转码中 1:转码失败 2:转码成功）
      */
-    @TableField(value = "status")
     private Integer status;
 
     /**
      * 创建时间
      */
-    @TableField(value = "create_time")
     private Date createTime;
 
     /**
      * 更新时间
      */
-    @TableField(value = "update_time")
     private Date updateTime;
 
     /**
      * 是否删除（0删除 1恢复）
      */
-    @TableField(value = "is_delete")
+    @TableLogic
     private Integer isDelete;
 
     /**
      * 回收站时间
      */
-    @TableField(value = "recovery_time")
     private Date recoveryTime;
 
     @TableField(exist = false)
